@@ -1,5 +1,4 @@
 <header></header>
-
 <main>
   <mat-card >
     <mat-card-header>
@@ -24,7 +23,6 @@
           "
           alt="bot avatar"
         />
-
         <p class="conversation__text">{{ message.text }}</p>
       </section>
     </mat-card-content>
@@ -33,7 +31,6 @@
       <mat-form-field>
         <mat-label>Type here!</mat-label>
         <input matInput #message maxlength="256" placeholder="Please enter your medical concerns." (keydown.enter)="send(message)"/>
-        <!-- <mat-hint align="start">{{ message.value.length }} / 256</mat-hint> -->
       </mat-form-field>
       <button mat-button (click)="send(message)">Send</button>
     </mat-card-actions>
