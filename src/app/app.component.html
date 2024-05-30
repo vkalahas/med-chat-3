@@ -1,17 +1,11 @@
 <header></header>
-<main>
-  <button *ngIf="!isAuthenticated" mat-raised-button color="primary" (click)="login()">
-    Login to access the chat
-  </button>
 
-  <mat-card *ngIf="isAuthenticated">
+<main>
+  <mat-card >
     <mat-card-header>
       <mat-toolbar>
-        <span>My Personal AI</span>
+        <span>Med AI Chat</span>
         <span></span>
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
       </mat-toolbar>
     </mat-card-header>
     <mat-card-content>
@@ -19,14 +13,14 @@
         #conversationRef
         *ngFor="let message of conversation"
         class="conversation"
-        [ngClass]="{ conversation__from_bot: message.from === 'bot' }"
+        [ngClass]="{ conversation__from_bot: message.from === 'user' }"
       >
         <img
           class="avatar"
           [src]="
             message.from === 'bot'
               ? '/assets/ChatGPT_logo.svg'
-              : profile.avatar
+              : '/assets/user.png'
           "
           alt="bot avatar"
         />
@@ -34,31 +28,17 @@
         <p class="conversation__text">{{ message.text }}</p>
       </section>
     </mat-card-content>
-    <mat-card-actions *ngIf="isAuthenticated">
+    <mat-card-actions>
       <mat-divider></mat-divider>
       <mat-form-field>
-        <mat-label>Message</mat-label>
-        <input matInput #message maxlength="256" placeholder="What's up..." (keyup.enter)="send(message)"/>
-        <mat-hint align="end">{{ message.value.length }} / 256</mat-hint>
+        <mat-label>Type here!</mat-label>
+        <input matInput #message maxlength="256" placeholder="Please enter your medical concerns." (keydown.enter)="send(message)"/>
+        <!-- <mat-hint align="start">{{ message.value.length }} / 256</mat-hint> -->
       </mat-form-field>
-      <button mat-button color="primary" (click)="send(message)">Send</button>
+      <button mat-button (click)="send(message)">Send</button>
     </mat-card-actions>
     <mat-card-footer>
       <mat-progress-bar [mode]="loadingStatus"></mat-progress-bar>
     </mat-card-footer>
   </mat-card>
 </main>
-<!-- <footer>
-  <span class="caption">
-    Built without AI by
-    <a target="_blank" href="https://wassim.dev">Wassim Chegham</a></span
-  >
-</footer> -->
-
-
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    <span>Logout</span>
-  </button>
-</mat-menu>

@@ -1,3 +1,5 @@
+
+
 main {
   margin: 0 auto;
   max-width: 800px;
@@ -5,21 +7,30 @@ main {
   text-align: center;
 }
 
+mat-card {
+  border-radius: 25px 25px 0px 0px;
+}
+
 mat-card-header,
 mat-card-title {
   margin: 0;
   padding: 0;
+  
 }
 
 mat-card-actions {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
+  
 }
 
 mat-toolbar {
   display: flex;
   flex: 1;
+  border-radius: 25px 25px 0px 0px;
+  background-color: lightskyblue;
+  color: white;
 }
 
 mat-toolbar span {
@@ -44,8 +55,10 @@ mat-card-content {
 }
 
 mat-card-actions > button {
-  height: 50px;
-  margin: 4px;
+  height: 25px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  margin-left: 5px;
 }
 
 .conversation {
@@ -58,7 +71,7 @@ mat-card-actions > button {
 .conversation__text {
   display: flex;
   flex-direction: column;
-  background: #00ffdc;
+  background: lightblue;
   margin: 5px;
   padding: 5px 10px;
   border-radius: 10px;
@@ -69,7 +82,7 @@ mat-card-actions > button {
 }
 
 .conversation__from_bot .conversation__text {
-  background: #ff007b;
+  background: aquamarine;
   color: white;
   text-align: end;
 }
@@ -80,17 +93,11 @@ mat-card-actions > button {
   border-radius: 50%;
 }
 
-footer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin: 10px 0;
+input {
+  color: red;
 }
 
-footer .caption {
-  padding: 30px 0;
-  color: gray;
-  font-size: 0.9em;
-  text-align: center;
+button {
+  background-color: lightskyblue;
+  border-radius: 25px;
 }

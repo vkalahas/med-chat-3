@@ -2,15 +2,13 @@ import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from "@angu
 import { MatCardModule } from "@angular/material/card";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
-import {
-  MatProgressBarModule,
-  ProgressBarMode,
-} from "@angular/material/progress-bar";
+import { MatProgressBarModule, ProgressBarMode } from "@angular/material/progress-bar";
 import { MatDivider, MatDividerModule } from "@angular/material/divider";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from "@angular/material/menu";
 import { CommonModule } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 
 type Message = {
   text: string;
@@ -36,11 +34,6 @@ type Message = {
   ],
 })
 export class AppComponent {
-  isAuthenticated = false;
-  profile = {
-    name: "",
-    avatar: "",
-  };
   conversation: Message[] = [];
   loadingStatus: ProgressBarMode = "determinate";
 
@@ -50,12 +43,10 @@ export class AppComponent {
   conversationRef!: QueryList<ElementRef<HTMLElement>>;
 
   ngAfterViewInit(): void {
-    this.conversationRef.changes
-        .subscribe(() => {
-          this.conversationRef.last.nativeElement.scrollIntoView();
-        });
-}
-
+    this.conversationRef.changes.subscribe(() => {
+      this.conversationRef.last.nativeElement.scrollIntoView();
+    });
+  }
 
   async send(prompt: HTMLInputElement) {
     this.loadingStatus = "buffer";
@@ -66,19 +57,22 @@ export class AppComponent {
       date: new Date(),
     });
 
-    const response = await fetch("/api/openai", {
+    // sk-proj-zFEoO7vTtdryhHlPNQlBT3BlbkFJV82BtcVszvPaAtkPS7x1
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer sk-proj-zFEoO7vTtdryhHlPNQlBT3BlbkFJV82BtcVszvPaAtkPS7x1",
       },
       body: JSON.stringify({
-        prompt: prompt.value,
-        user: this.profile.name,
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt.value }],
+        temperature: 0.7,
       }),
     });
-    const { text } = await response.json();
+    let text = await response.json();
     this.updateConversation({
-      text,
+      text: text.choices[0].message.content,
       from: "bot",
       date: new Date(),
     });
@@ -90,36 +84,5 @@ export class AppComponent {
 
   updateConversation(message: Message) {
     this.conversation.push(message);
-  }
-
-  async ngOnInit() {
-    this.isAuthenticated = !!(await this.isLoggedIn());
-    if (this.isAuthenticated) {
-      this.profile = await this.getProfile();
-    }
-  }
-    
-
-  login() {
-    window.location.href = "/.auth/login/aad?post_login_redirect_uri=/";
-  }
-
-  logout() {
-    window.location.href = "/.auth/logout?post_logout_redirect_uri=/";
-  }
-
-  async isLoggedIn() {
-    const response = await fetch("/.auth/me")
-    const { clientPrincipal } = await response.json();
-    return clientPrincipal !== null;
-  }
-
-  async getProfile() {
-    const response = await fetch("/.auth/me");
-    const { clientPrincipal } = await response.json();
-    return {
-      name: clientPrincipal?.userDetails,
-      avatar: clientPrincipal?.claims?.at(0).avatar || "/assets/user.png",
-    }
   }
 }
